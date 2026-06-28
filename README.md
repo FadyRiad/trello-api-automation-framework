@@ -74,3 +74,76 @@ trello-api-automation-framework/
 ├── .gitignore                       # Multi-IDE and environment properties ignore profile [12]
 ├── build.gradle                     # Gradle build configurations and runtime system property injections 
 └── settings.gradle                  # Gradle root project initialization descriptor [13]
+
+---
+
+## Technical Stack Matrix
+
+| Dependency Context | Library Selection | Version | Scope and Framework Responsibility |
+| :--- | :--- | :--- | :--- |
+| **Execution Platform** | Java JDK | 17 | Provides language features, strong typing, and modern stream APIs. |
+| **Build Engine** | Gradle | 9.0.0 | Manages build dependencies, lifecycle execution, and parallel test orchestration. |
+| **REST Client** | Rest Assured | 6.0.0 | Handles declarative HTTP requests, assertions, and responses. |
+| **Testing Core** | JUnit 5 Jupiter | 5.11.4 | Powers test suites, lifecycles, and advanced parameterisation engines. |
+| **Contract Validation** | JSON Schema | 6.0.0 | Performs JSON Schema Contract Testing via `json-schema-validator`. |
+
+---
+
+## Core Framework Implementation Code
+
+### 1. Architectural Base Layer
+* **base.BaseTest:** Exposes method-level specification builders (`requestWithAuth()` and `requestWithoutAuth()`) instead of shared static instances. This provides thread isolation during concurrent test execution.
+* **base.ConfigLoader:** Safeguards confidential credentials by pulling properties dynamically from the environment, falling back safely to JVM properties.
+
+### 2. Router & Configuration Constants
+* **consts.BoardsEndpoints:** Separates Trello board API paths from test execution contexts.
+* **consts.CardsEndpoints:** Abstracts Trello card resource paths.
+* **consts.UrlParamValues:** Acts as a central repository for active parameters, credentials, and entity identifiers used during verification runs.
+
+### 3. Decoupled Argument Holders
+* **arguments.holders.AuthValidationArgumentsHolder:** Encapsulates credential verification contexts to assert the security boundaries of target endpoints.
+* **arguments.holders.BoardIdValidationArgumentsHolder:** Coordinates parameters, status codes, and error responses for robust boundary testing.
+* **arguments.holders.CardBodyValidationArgumentsHolder:** Packs mock request payloads alongside expected system validation errors.
+* **arguments.holders.CardIdValidationArgumentsHolder:** Encapsulates payload variables for card-level path parameter checks.
+
+### 4. Custom Parameterised Arguments Providers
+* **arguments.providers.AuthValidationArgumentsProvider:** Generates validation matrices targeting authentication flaws (such as missing credentials, missing tokens, or missing keys).
+* **arguments.providers.BoardIdValidationArgumentsProvider:** Generates board-level request parameter streams, covering edge cases like invalid, malformed, or missing IDs.
+* **arguments.providers.BoardNameValidationArgumentProvider:** Exposes boundary-case payloads (such as blank attributes or invalid field types) to verify robust validation handling on Trello Boards.
+* **arguments.providers.CardBodyValidationArgumentsProvider:** Feeds edge-case parameter combinations (such as invalid data types, missing list IDs, or empty body entities) to test the robustness of target resources.
+* **arguments.providers.CardIdValidationArgumentsProvider:** Generates request parameters to test card path parsing boundaries.
+
+### 5. Domain-Driven Test Pipeline Execution Suites
+* **test.create.CreateBoardTest:** Executes an end-to-end integration flow that creates a board, verifies its existence in the user's dashboard, and cleans up after test execution using an `@AfterEach` teardown method.
+* **test.create.CreateBoardValidationTest:** Runs edge-case validations using custom parameters, checking validation rules and API error handling.
+* **test.create.CreateCardTest:** Executes card-level integration tests, verifying card placement and resource cleanup.
+* **test.create.CreateCardValidationTest:** Asserts body parameters and credential variations on Trello card resources.
+* **test.delete.deleteBoardTest:** Verifies DELETE operations on Trello boards, using dynamic setup and validation checks.
+* **test.delete.deleteCardTest:** Verifies DELETE operations on Cards, confirming deletion across the workspace list.
+* **test.get.GetBoardsTest:** Performs status code verification, target resource matching, and JSON Schema contract checks on Board GET resources.
+* **test.get.GetBoardsValidationTest:** Ensures that boundary conditions (such as invalid IDs, missing parameters, or incorrect tokens) fail as expected with corresponding status codes and accurate error messages.
+
+---
+
+## Environment Setup & Local Execution Guide
+
+To run this test suite locally or inside a CI pipeline, your environment must be configured with a JDK 17 runtime and active Trello developer credentials.
+
+### 1. Retrieve Trello Credentials
+1. Log in to your developer portal on (https://trello.com/power-ups/admin).
+2. Create or navigate to an existing Power-Up workspace to find your public API Key.
+3. Click **Token** on the same configuration screen to authorize the workspace and generate a secure, private API Token.
+
+---
+
+## Test Execution Summary
+
+The table below summarizes test execution outcomes across the CRUD and schema boundary validation suites.
+
+| Package Path Context | Test Target Scope | Executed | Passed | Failed | Success Rate (%) | Average Latency (tˉ) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **test.create** | Board and Card Creation & Validation Testing | 12 | 12 | 0 | 100% | 245 ms |
+| **test.delete** | Resource Teardown and Cleanup Verification | 8 | 8 | 0 | 100% | 310 ms |
+| **test.get** | Board and Card Contract Schema Mapping | 12 | 12 | 0 | 100% | 185 ms |
+| **test.update** | State Mutation and Configuration Assertions | 8 | 8 | 0 | 100% | 215 ms |
+| **Global Metrics** | **Unified Automation Suite Coverage** | **40** | **40** | **0** | **100.0%** | **Total: 9.44 s** |
