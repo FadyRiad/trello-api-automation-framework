@@ -74,6 +74,7 @@ trello-api-automation-framework/
 ├── .gitignore                       # Multi-IDE and environment properties ignore profile [12]
 ├── build.gradle                     # Gradle build configurations and runtime system property injections 
 └── settings.gradle                  # Gradle root project initialization descriptor [13]
+```
 
 ---
 
