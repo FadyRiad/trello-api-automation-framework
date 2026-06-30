@@ -16,14 +16,15 @@ dependencies {
             ['org.junit.jupiter:junit-jupiter-api:5.6.1'],
             ['org.junit.jupiter:junit-jupiter-engine:5.6.1'],
             ['org.junit.platform:junit-platform-launcher:1.6.1'],
-            ['org.junit.jupiter:junit-jupiter-params:6.0.3']
+            ['org.junit.jupiter:junit-jupiter-params:6.0.3'],
+            ['io.cucumber:cucumber-jvm:7.34.3'],
+            ['io.cucumber:cucumber-junit-platform-engine:7.34.3']
     )
 }
 
 test {
     useJUnitPlatform()
 
-    // Inject environment variables as system properties to ensure JVM isolation
     systemProperty "trello.key", System.getenv("TRELLO_API_KEY")
     systemProperty "trello.token", System.getenv("TRELLO_API_TOKEN")
 
