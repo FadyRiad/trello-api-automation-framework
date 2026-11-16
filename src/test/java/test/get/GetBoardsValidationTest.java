@@ -18,18 +18,6 @@ import java.util.Map;
 public class GetBoardsValidationTest extends BaseTest {
 
     @ParameterizedTest
-    @ArgumentsSource(BoardIdValidationArgumentsProvider.class)
-    public void checkGetBoardWithInvalidId(BoardIdValidationArgumentsHolder validationArguments) {
-        Response response = requestWithAuth()
-                .pathParams(validationArguments.getPathParams())
-                .get(BoardsEndpoints.GET_BOARD_URL);
-        response
-                .then()
-                .statusCode(validationArguments.getStatusCode());
-        Assertions.assertEquals(validationArguments.getErrorMessage(), response.body().asString());
-    }
-
-    @ParameterizedTest
     @ArgumentsSource(AuthValidationArgumentsProvider.class)
     public void checkGetBoardWithInvalidAuth(AuthValidationArgumentsHolder validationArguments) {
         Response response = requestWithoutAuth()

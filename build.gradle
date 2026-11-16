@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.25"
 }
 
 group 'org.example'
@@ -13,12 +14,14 @@ dependencies {
     testImplementation(
             ['io.rest-assured:rest-assured:4.4.0'],
             ['io.rest-assured:json-schema-validator:4.4.0'],
-            ['org.junit.jupiter:junit-jupiter-api:5.6.1'],
-            ['org.junit.jupiter:junit-jupiter-engine:5.6.1'],
-            ['org.junit.platform:junit-platform-launcher:1.6.1'],
-            ['org.junit.jupiter:junit-jupiter-params:6.0.3'],
-            ['io.cucumber:cucumber-jvm:7.34.3'],
-            ['io.cucumber:cucumber-junit-platform-engine:7.34.3']
+            ['org.junit.jupiter:junit-jupiter-api:5.10.2'],
+            ['org.junit.jupiter:junit-jupiter-engine:5.10.2'],
+            ['org.junit.platform:junit-platform-launcher:1.10.2'],
+            ['org.junit.jupiter:junit-jupiter-params:5.10.2'],
+            ['io.cucumber:cucumber-java:7.15.0'],
+            ['io.cucumber:cucumber-junit-platform-engine:7.15.0'],
+            ['io.cucumber:cucumber-picocontainer:7.15.0'],
+            ['org.junit.platform:junit-platform-suite-engine:1.10.2']
     )
 }
 
@@ -32,4 +35,10 @@ test {
         events "passed", "skipped", "failed"
     }
 
+}
+
+cucumberReports{
+    projectNameOverride = 'Cucumber BDD test project'
+    outputDir = file('build/cucumber-report')
+    reports = files('build/cucumber-report/json/cucumber-report.json')
 }

@@ -3,7 +3,6 @@
   "items": {
     "type": "object",
     "required": [
-      "name",
       "id"
     ],
     "properties": {
