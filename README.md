@@ -119,8 +119,8 @@ trello-api-automation-framework/
 * **test.create.CreateBoardValidationTest:** Runs edge-case validations using custom parameters, checking validation rules and API error handling.
 * **test.create.CreateCardTest:** Executes card-level integration tests, verifying card placement and resource cleanup.
 * **test.create.CreateCardValidationTest:** Asserts body parameters and credential variations on Trello card resources.
-* **test.delete.deleteBoardTest:** Verifies DELETE operations on Trello boards, using dynamic setup and validation checks.
-* **test.delete.deleteCardTest:** Verifies DELETE operations on Cards, confirming deletion across the workspace list.
+* **test.delete.DeleteBoardTest:** Verifies DELETE operations on Trello boards, using dynamic setup and validation checks.
+* **test.delete.DeleteCardTest:** Verifies DELETE operations on Cards, confirming deletion across the workspace list.
 * **test.get.GetBoardsTest:** Performs status code verification, target resource matching, and JSON Schema contract checks on Board GET resources.
 * **test.get.GetBoardsValidationTest:** Ensures that boundary conditions (such as invalid IDs, missing parameters, or incorrect tokens) fail as expected with corresponding status codes and accurate error messages.
 
