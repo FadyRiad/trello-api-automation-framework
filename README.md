@@ -1,6 +1,8 @@
 # Trello API Test Automation Framework
 
-API test automation framework for the [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/), built with **Java 17, REST Assured, JUnit 5 and Cucumber (BDD)**.
+[![CI](https://github.com/FadyRiad/trello-api-automation-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/FadyRiad/trello-api-automation-framework/actions/workflows/ci.yml)
+
+API test automation framework for the [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/), built with **Java 17, REST Assured, JUnit 5 and Cucumber (BDD)** and executed on every push by **GitHub Actions**.
 
 The suite covers the **Boards** and **Cards** resources end to end, with emphasis on negative and validation testing (missing or invalid credentials, malformed IDs, invalid request bodies) alongside the happy paths. Responses are checked for status codes, body values and structure (JSON Schema).
 
@@ -12,7 +14,7 @@ The suite covers the **Boards** and **Cards** resources end to end, with emphasi
 - **Two test styles on top of one shared core:** plain JUnit 5 tests and Gherkin scenarios reuse the same endpoint constants and request setup.
 - **Data-driven validation:** custom JUnit 5 `ArgumentsProvider` + holder classes keep test data out of the test logic.
 - **Contract testing:** response bodies are validated against JSON Schemas.
-- **No secrets in the code:** API key and token are injected from environment variables.
+- **Continuous integration:** GitHub Actions runs the full suite on every push and pull request and publishes the HTML reports as build artifacts.
 - **Two HTML reports** per run: Gradle's JUnit report and a Cucumber HTML report.
 
 ---
@@ -63,6 +65,7 @@ The suite covers the **Boards** and **Cards** resources end to end, with emphasi
 | Dependency injection for steps | `cucumber-picocontainer` |
 | Suite runner | JUnit Platform Suite Engine |
 | Reporting | JUnit HTML report and Cucumber HTML report (Gradle plugin) |
+| CI | GitHub Actions |
 
 ---
 
@@ -70,6 +73,7 @@ The suite covers the **Boards** and **Cards** resources end to end, with emphasi
 
 ```text
 rest_assured_test/
+├── .github/workflows/ci.yml   # CI pipeline (GitHub Actions)
 ├── build.gradle
 ├── settings.gradle
 └── src/test
@@ -107,8 +111,6 @@ rest_assured_test/
 
 **Reusable BDD steps.** Cucumber steps are generic (`a request with authorization`, `the request is sent to endpoint`, `the response status code is`, `the response body is equal to`) and driven by data tables, so new scenarios can be written in Gherkin without new Java code. `ScenarioContext` is shared through PicoContainer to pass the response between steps.
 
-**Credentials stay out of the repository.** `build.gradle` reads `TRELLO_API_KEY` and `TRELLO_API_TOKEN` from the environment and exposes them to the tests as JVM system properties (`trello.key`, `trello.token`).
-
 ---
 
 ## Running the Tests
@@ -116,21 +118,6 @@ rest_assured_test/
 **Prerequisites**
 
 - JDK 17
-- A Trello API key and token ([get them here](https://trello.com/power-ups/admin))
-
-**Set credentials**
-
-```powershell
-# Windows PowerShell
-$env:TRELLO_API_KEY   = "<your-api-key>"
-$env:TRELLO_API_TOKEN = "<your-api-token>"
-```
-
-```bash
-# macOS / Linux
-export TRELLO_API_KEY="<your-api-key>"
-export TRELLO_API_TOKEN="<your-api-token>"
-```
 
 **Run everything**
 
@@ -140,7 +127,37 @@ export TRELLO_API_TOKEN="<your-api-token>"
 
 The Cucumber HTML report is generated automatically after the test task finishes.
 
-> Some tests operate on existing Trello resources (board, list and card IDs) defined in `UrlParamValues`. To run the suite against your own account, replace those IDs with ones from your workspace.
+### Test account configuration
+
+The suite runs against a personal Trello test account. The API key, token and the IDs of the test board, list and cards are defined in `src/test/java/consts/UrlParamValues.java`.
+
+To run it against your own Trello account:
+
+1. Get an API key and token from the [Trello Power-Ups admin](https://trello.com/power-ups/admin).
+2. Replace `VALID_KEY` and `VALID_TOKEN` in `UrlParamValues.java`.
+3. Replace the board, list and card IDs (`EXISTING_BOARD_ID`, `EXISTING_LIST_ID`, `EXISTING_CARD_ID`, `CARD_ID_TO_UPDATE`) and `USER_NAME` with resources from your workspace.
+
+> If the tests fail with `401 Unauthorized`, the token has expired or been revoked. Generate a new one and update `UrlParamValues.java`.
+
+---
+
+## Continuous Integration
+
+The pipeline is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) and runs on every push to `main` and on every pull request.
+
+| Step | What it does |
+|------|--------------|
+| Checkout | Fetches the repository |
+| Set up JDK 17 | Installs Temurin 17 |
+| Set up Gradle | Configures Gradle with dependency caching |
+| Run tests | Executes `./gradlew test` (JUnit 5 and Cucumber) |
+| Upload test reports | Publishes the JUnit and Cucumber HTML reports as the `test-reports` artifact, even when tests fail |
+
+**To view a CI run:**
+
+1. Open the **Actions** tab of the repository.
+2. Select the latest run of the **CI** workflow.
+3. Download the `test-reports` artifact from the **Artifacts** section at the bottom of the run summary.
 
 ---
 
@@ -150,6 +167,8 @@ The Cucumber HTML report is generated automatically after the test task finishes
 |--------|----------|
 | JUnit / Gradle test report | `build/reports/tests/test/index.html` |
 | Cucumber HTML report | `build/cucumber-report/cucumber-html-reports/` |
+
+The same reports are available for every CI run as downloadable artifacts.
 
 ### Latest run
 
