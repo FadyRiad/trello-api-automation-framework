@@ -10,7 +10,7 @@ import base.BaseTest;
 
 import java.util.Map;
 
-public class deleteCardTest extends BaseTest {
+public class DeleteCardTest extends BaseTest {
 
     private String createdCardId;
 

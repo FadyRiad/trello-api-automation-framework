@@ -3,11 +3,17 @@ plugins {
     id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.25"
 }
 
-group 'org.example'
+group 'com.fadyriad'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 dependencies {
@@ -35,10 +41,13 @@ test {
         events "passed", "skipped", "failed"
     }
 
+    finalizedBy 'generateCucumberReports'
+
 }
 
-cucumberReports{
+cucumberReports {
     projectNameOverride = 'Cucumber BDD test project'
     outputDir = file('build/cucumber-report')
     reports = files('build/cucumber-report/json/cucumber-report.json')
 }
+

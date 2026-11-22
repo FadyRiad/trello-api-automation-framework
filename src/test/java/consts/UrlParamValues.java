@@ -4,8 +4,8 @@ import java.util.Map;
 
 public class UrlParamValues {
 
-    public static final String VALID_KEY = "ff9b892e25dd6efcf5edf82e8a014055";
-    public static final String VALID_TOKEN = "ATTAf620867ae282787f9ec5c6eab9f6761d4ddfb1fa3fed0ca170c96562120218f57A9FA5DF";
+    public static final String VALID_KEY = "065a1adaf1ccc7bada1c82919fd5e112";
+    public static final String VALID_TOKEN = "ATTA7269d895281512fef6d252cc5058cec7af00b26afde68f2d5a26baf02467b2ceA0981C65";
 
     public static final String ANOTHER_USER_KEY = " ";
     public static final String ANOTHER_USER_TOKEN = " ";
