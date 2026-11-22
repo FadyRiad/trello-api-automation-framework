@@ -174,4 +174,4 @@ The Cucumber HTML report is generated automatically after the test task finishes
 ## Author
 
 **Fady Riad**, QA Automation Engineer / SDET
-[LinkedIn](<your-linkedin-url>)
+[LinkedIn](https://www.linkedin.com/in/fadyriadshokrallah/)
